@@ -11,20 +11,20 @@ export default class HomeScreen extends Component{
         super();
         this.state = {
             isOpen: false,
+            idObject: '',
             results: '',
-            modalComponent: 'createObject'
+            modalComponent: 'CreateObject'
         }
     }
 
-   toggleModal = (type) => {
-       alert(type)
+   toggleModal = (type) => { 
         this.setState({
+            modalComponent: type,
             isOpen: !this.state.isOpen
         });
    }
 
    getAllData = async () => {
-        console.log(this.state.results)
         const query = new Parse.Query("Cars");
         query.exists("name");
         const resultQuery = await query.find();
@@ -32,7 +32,7 @@ export default class HomeScreen extends Component{
    }
 
     componentWillMount(){
-        //this.getAllData();
+        this.getAllData();
     }
     _onPressDeleteObject(id){
         const query = new Parse.Query("Cars");
@@ -48,16 +48,11 @@ export default class HomeScreen extends Component{
         });
     }
     _onPressUpdateObject(id){
-        const query = new Parse.Query("Cars");
-        query.get(id).then((object) => {
-            alert(object)
-        }, (error) => {
-            // This will be called.
-            // error is an instance of Parse.Error with details about the error.
-            if (error.code === Parse.Error.OBJECT_NOT_FOUND) {
-                alert("Uh oh, we couldn't find the object!");
-            }
+        console.log(id)
+        this.setState({
+            idObject: id
         });
+        this.toggleModal("UpdateObject")
     }
     _onPress(id) {
         Alert.alert(
@@ -78,7 +73,7 @@ export default class HomeScreen extends Component{
     renderCars = ({item, separators}) => {
         return (
             <TouchableHighlight
-                onPress={() => this._onPress(item.id, item.get("name"))}>
+                onPress={() => this._onPress(item.id)}>
                 <View style={styles.borderFlatListItens}>
                     <Text>{item.get("name")}</Text>
                 </View>
@@ -94,8 +89,10 @@ export default class HomeScreen extends Component{
     }
     renderUpdateObject = (id) =>{
         return (
-            <UpdateObject 
-                id={id}/>
+            <UpdateObject
+                updatePage={this.getAllData}
+                toogleModalPage={this.toggleModal}
+                idObject={this.state.idObject}/>
         )
     }
     render(){
@@ -104,7 +101,7 @@ export default class HomeScreen extends Component{
                <View style={{height: 70}}>
                     <Button
                         color="#841584"
-                        onPress={this.toggleModal}
+                        onPress={() => { this.toggleModal("CreateObject");}}
                         title="Create"
                         accessibilityLabel="Create an object"/>
                </View>               
@@ -116,8 +113,8 @@ export default class HomeScreen extends Component{
                    animationType={'slide'}
                    >
                     <View style={styles.modalContainer}>                       
-                        
-                    </View>                    
+                        {this.state.modalComponent === 'CreateObject' ? this.renderCreateObject(): this.renderUpdateObject() }
+                    </View>
                 </Modal>
 
                <FlatList

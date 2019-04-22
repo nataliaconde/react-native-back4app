@@ -55,13 +55,6 @@ export default class CreateObject extends Component{
             });
         }
     }
-
-    toggleModal = () => {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    }
-    
     render(){
         return(
             <View style={styles.container}>
@@ -73,6 +66,7 @@ export default class CreateObject extends Component{
                             title="X"
                             accessibilityLabel="Close"/>                            
                     </View>
+
                     <View style={styles.inputWrap}>
                         <Text style={styles.labelText}>Car name</Text>
                         <TextInput 
@@ -140,12 +134,14 @@ const styles = StyleSheet.create({
         padding: 10
     },
     inputdate: {
+        justifyContent:"center",
         fontSize: 14,
-        marginTop: -20,
+        marginTop: -5,
         color: "#000",
-        height: 60,
+        height: 45,
         marginBottom: 20,
-        borderBottomWidth: 2
+        borderBottomWidth: 2,
+        paddingHorizontal: 0
     }
  });
 

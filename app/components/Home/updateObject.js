@@ -7,14 +7,18 @@ export default class UpdateObject extends Component{
     constructor(){
         super();
         this.state = {
-            isOpen: false,
-            nameCar: '',
-            colorCar: '',
-            nameError: null
         }
     }
 
-    insertObject = () => {
+    componentWillMount(){
+        const query = new Parse.Query("Cars");
+        query.get(this.props.idObject).then((object) => {
+            console.log(JSON.stringify(object));
+        });
+    }
+
+   
+    updateObject = () => {
         let 
             nameCar = this.state.nameCar,
             colorCar = this.state.colorCar;
@@ -98,9 +102,9 @@ export default class UpdateObject extends Component{
                         )}
 
                         <Button
-                            onPress={this.insertObject}
-                            title="Create"
-                            accessibilityLabel="Create"
+                            onPress={this.updateObject}
+                            title="Update"
+                            accessibilityLabel="Update"
                             color={'#841584'}/>
                     </View> 
                 </View>
@@ -123,7 +127,6 @@ const styles = StyleSheet.create({
         paddingTop: 30
     },
     btnClose: {
-        backgroundColor: '#841584',
         margin: 20,
         marginTop: -15,
         width: 50, 
@@ -144,15 +147,14 @@ const styles = StyleSheet.create({
         padding: 10
     },
     inputdate: {
+        justifyContent:"center",
         fontSize: 14,
-        marginTop: -20,
+        marginTop: -5,
         color: "#000",
-        height: 60,
+        height: 45,
         marginBottom: 20,
-        borderBottomWidth: 2
-    },
-    btnStyle:{
-        
+        borderBottomWidth: 2,
+        paddingHorizontal: 0
     }
  });
 
