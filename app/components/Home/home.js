@@ -48,7 +48,6 @@ export default class HomeScreen extends Component{
         });
     }
     _onPressUpdateObject(id){
-        console.log(id)
         this.setState({
             idObject: id
         });
@@ -131,6 +130,7 @@ export default class HomeScreen extends Component{
 
 const styles = StyleSheet.create({
     borderFlatListItens: {
+        paddingTop: 20,
         paddingBottom: 20,
         borderBottomWidth: 2,
         height: 50

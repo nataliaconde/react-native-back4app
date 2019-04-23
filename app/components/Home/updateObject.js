@@ -7,19 +7,30 @@ export default class UpdateObject extends Component{
     constructor(){
         super();
         this.state = {
+            objectCar: '',
+            nameCar: null,
+            colorCar: null
         }
     }
 
-    componentWillMount(){
+    carObject = async (id) =>{
         const query = new Parse.Query("Cars");
-        query.get(this.props.idObject).then((object) => {
-            console.log(JSON.stringify(object));
+        query.get(id).then(result=>{
+            this.setState({
+                nameCar: result.get("name"),
+                colorCar: result.get("color")
+            });
         });
+    }
+    componentWillMount(){
+        const id = this.props.idObject;
+        this.carObject(id);
     }
 
    
     updateObject = () => {
         let 
+            id = this.props.idObject,
             nameCar = this.state.nameCar,
             colorCar = this.state.colorCar;
         
@@ -27,48 +38,34 @@ export default class UpdateObject extends Component{
             this.setState(() => ({ nameError: `Fill the fields correctly.` }));
         } else {
             this.setState(() => ({ nameError: null }));
-
-            const Cars = Parse.Object.extend("Cars");
-            const cars = new Cars({
-                name: nameCar,
-                color: colorCar
-            });
-
-            cars.save()
-                .then((object) => {
-                // Execute any logic that should take place after the object is saved.
-                this.props.updatePage();
-                Alert.alert(
-                    'Object created!',
-                    `New car: ${nameCar}`,
-                    [
-                        {
-                            text: 'OK',
-                            onPress: () => {
-                                this.props.toogleModalPage();
-                            },
-                            style: 'cancel',
-                        }
-                    ]
-                )
-                
-            }, (error) => {
-                // Execute any logic that should take place if the save fails.
-                // error is a Parse.Error with an error code and message.
-                alert('Failed to create new object, with error code: ' + error.message);
+            const query = new Parse.Query("Cars");
+            query.get(id).then(object=>{
+                object.set("name", nameCar);
+                object.set("color", colorCar);
+                object.save().then(result=>{
+                    this.props.updatePage();
+                    Alert.alert(
+                        'Update created!',
+                        `Car: ${nameCar}`,
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => {
+                                    this.props.toogleModalPage();
+                                },
+                                style: 'cancel',
+                            }
+                        ]
+                    )
+                }, (error) => {
+                    // Execute any logic that should take place if the save fails.
+                    // error is a Parse.Error with an error code and message.
+                    alert('Failed to create new object, with error code: ' + error.message);
+                });
             });
         }
     }
 
-    toggleModal = () => {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    }
-
-    loadData = (id) => {
-        
-    }
     render(){
         return(
             <View style={styles.container}>
@@ -86,14 +83,16 @@ export default class UpdateObject extends Component{
                             onChangeText={(text) => this.setState({nameCar: text})}
                             style={styles.inputdate}
                             multiline={false} 
-                            maxLength = {40} />
+                            maxLength = {40}
+                            value={this.state.nameCar}/>
                        
                         <Text style={styles.labelText}>Car Color</Text>
                         <TextInput 
                             onChangeText={(text) => this.setState({colorCar: text})}
                             style={styles.inputdate} 
                             multiline={false} 
-                            maxLength = {40}/>
+                            maxLength = {40}
+                            value={this.state.colorCar}/>
 
                         {!!this.state.nameError && (
                             <View styles={styles.divError}>

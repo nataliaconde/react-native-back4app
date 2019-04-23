@@ -11,9 +11,9 @@ import HomeScreen from "./app/components/Home/home";
 import UpdateObject from "./app/components/Home/updateObject";
 
 const RootStack = createStackNavigator({
-//    Login: LoginScreen,
-    Home: HomeScreen,
-    UpdateObject: UpdateObject
+  Login: LoginScreen,
+  Home: HomeScreen,
+  UpdateObject: UpdateObject
 });
 
 const AppNavigator = createAppContainer(RootStack);
@@ -30,12 +30,3 @@ export default class App extends React.Component {
     return ( <AppNavigator/>);
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -10,12 +10,9 @@ export default class LoginScreen extends Component{
             result: '',
             password: '',
             username: '',
-            loading: false,
             nameError: null
         };
       
-        this.installParse();
-
         this.changeRoute = (page) => {
             this.props.navigation.navigate(page)
         }
@@ -43,6 +40,7 @@ export default class LoginScreen extends Component{
             })
         })
     }
+
     checkUser = async () => {
         let userDetails = this.state;
         
